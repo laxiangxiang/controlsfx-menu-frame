@@ -1,0 +1,57 @@
+.samples-tree {
+    -fx-background-color: -fx-outer-border, -fx-background;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 2, 0;
+}
+
+.button{
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-font-size: 15px;
+    -fx-background-color:
+            #ECECEC,
+            linear-gradient(#ECECEC 50%, #D5D5D5 100%),
+            radial-gradient(center 50% -40%, radius 200%, #ECECEC 45%, #D5D5D5 50%);
+    -fx-text-fill: black;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.8) , 3, 0.5 , 1 , 2 );
+}
+
+.button:focused,.button:hover{
+    -fx-background-color: #D5D5D5;
+    -fx-border-color: #0384ec;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+}
+
+.right-panel {
+    -fx-padding: 5;
+}
+
+.right-panel > .menu-name {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+}
+
+.right-panel > .separator {
+    -fx-padding: 5 0 5 0;
+}
+
+.right-panel > .description {
+    -fx-text-alignment: justify;
+}
+
+.right-panel > * > .project-name-title, 
+.right-panel > * > .property {
+    -fx-font-weight: bold;
+}
+
+.right-panel > * > .project-name {
+    -fx-text-alignment: justify;
+}
+
+/* 
+ * The area beneath the description specifically to allow people to interact with
+ * the sample.
+ */
+.right-panel > .control-panel {
+    -fx-padding: 5 0 0 0;
+}
