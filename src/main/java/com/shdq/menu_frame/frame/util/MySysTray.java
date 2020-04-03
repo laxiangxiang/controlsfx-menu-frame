@@ -11,7 +11,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -27,9 +26,11 @@ public class MySysTray {
     private TrayIcon trayIcon = null;
     private Timeline timeline = new Timeline();
     private Stage stage;
+    private CheckUtil checkUtil;
 
-    public MySysTray(Stage stage) {
+    public MySysTray(Stage stage,CheckUtil checkUtil) {
         this.stage = stage;
+        this.checkUtil = checkUtil;
     }
 
     public void initSystemTray() {
@@ -65,6 +66,8 @@ public class MySysTray {
                     SystemTray.getSystemTray().remove(trayIcon);
                     // 关闭应用
                     Platform.exit();
+                    //关闭与服务端的连接
+                    checkUtil.getNettyClient().close();
                     // 延迟500毫秒关闭进程
                     Timeline timeline = new Timeline();
                     timeline.setCycleCount(1);
@@ -106,7 +109,7 @@ public class MySysTray {
         hideItem.addActionListener(actionListener);
 
         try {
-            InputStream inputStream = getClass().getResourceAsStream("/image/controlsfx-API.png");
+            InputStream inputStream = getClass().getResourceAsStream("/images/controlsfx-API.png");
             // 4、我们的托盘图标
             trayIcon = new TrayIcon(ImageIO.read(inputStream), MenuFrame.appName, popupMenu);
             trayIcon.setImageAutoSize(true);

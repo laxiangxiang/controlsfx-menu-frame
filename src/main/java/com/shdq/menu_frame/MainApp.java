@@ -18,6 +18,8 @@ public class MainApp extends MenuFrame {
     public static void main(String[] args) {
         appName = "My Daemon Framework";
         mainMenuName = "主页概览";
+        serverIp = "127.0.0.1";
+        serverHeartBeatPort=8989;
         showOverViewOnRoot = false;
         launch(args);
     }
@@ -39,12 +41,12 @@ public class MainApp extends MenuFrame {
 
     @Override
     public void maintainMenuSortMap(Map<String,List<String>> menuMap) {
-        menuMap.put("ControlsFX API", Arrays.asList("3","/image/controlsfx-API.png"));
-        menuMap.put("设备管理",Arrays.asList("2","/image/equipment.png"));
+        menuMap.put("ControlsFX API", Arrays.asList("3", "/images/controlsfx-API.png"));
+        menuMap.put("设备管理",Arrays.asList("2", "/images/equipment.png"));
         menuMap.put("设备管理.设备OEE",Arrays.asList("2.1",""));
         menuMap.put("设备管理.设备故障率",Arrays.asList("2.2",""));
-        menuMap.put("质量管理",Arrays.asList("1","/image/quality.png"));
+        menuMap.put("质量管理",Arrays.asList("1", "/images/quality.png"));
         menuMap.put("质量管理.产品合格率",Arrays.asList("1.1",""));
-        menuMap.put(mainMenuName,Arrays.asList("0", "/image/home.png"));
+        menuMap.put(mainMenuName,Arrays.asList("0", "/images/home.png"));
     }
 }
