@@ -15,7 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -56,9 +55,10 @@ public class CheckUtil extends Application {
         showCheckInterface(stage);
         Task dbTask = createDBTask();
         Task heartBeatTask = createHeartbeatTask(MenuFrame.serverIp, MenuFrame.serverHeartBeatPort);
+        Task waitTask = createWaitTask();
         check(dbTask, dbLabel, dbProgressIndicator, dbImageView);
-        dbTask.valueProperty().addListener((observable) -> {
-            Double o = (Double) dbTask.getValue();
+        dbTask.valueProperty().addListener((observable, oldValue, newValue) -> {
+            Double o = (Double) newValue;
             if (o == 1.0 || o == -1.0) {
                 if (o == 1.0) {
 
@@ -66,16 +66,20 @@ public class CheckUtil extends Application {
                 check(heartBeatTask, serverLabel, serverProgressIndicator, serverImageView);
             }
         });
-        heartBeatTask.valueProperty().addListener((observable) -> {
-            Double o = (Double) heartBeatTask.getValue();
+        heartBeatTask.valueProperty().addListener((observable, oldValue, newValue) -> {
+            double o = (Double)newValue;
             if (o == 1.0 || o == -1.0) {
-                stage.close();
-                if (o == 1.0) {
-                    menuFrame.login();
-                }else {
-
-                }
+                check(waitTask);
             }
+        });
+        waitTask.valueProperty().addListener((observable, oldValue, newValue) -> {
+            double o = (Double)newValue;
+            if (o == 1.0) {
+                menuFrame.login();
+            }else {
+
+            }
+            stage.close();
         });
     }
 
@@ -130,6 +134,16 @@ public class CheckUtil extends Application {
         HBox.setMargin(progressIndicator, new Insets(10, 0, 10, 5));
         hBox.getChildren().addAll(imageView, label, progressIndicator);
         return hBox;
+    }
+
+    private void check(Task<Double> task){
+        Service<Double> service = new Service() {
+            @Override
+            protected Task createTask() {
+                return task;
+            }
+        };
+        service.start();
     }
 
     private void check(Task<Double> task, Label label, ProgressIndicator indicator, ImageView imageView) {
@@ -205,7 +219,6 @@ public class CheckUtil extends Application {
                 nettyClient.setNode(node);
                 Thread t = new Thread(nettyClient);
                 try {
-                    Thread.sleep(5000);
                     t.start();
                     //等待客户端连接后的通知，不管成功与否,这里不需要循环判断连接与否
 //                    while (!nettyClient.isConnected()) {
@@ -214,7 +227,6 @@ public class CheckUtil extends Application {
                     }
 //                    }
                     if (nettyClient.isConnected()){
-                        Thread.sleep(5000);
                         updateValue(1.0);
                         updateProgress(1, 1);
                         updateMessage("与服务端心跳连接成功！");
@@ -231,6 +243,16 @@ public class CheckUtil extends Application {
                     updateMessage("与服务端连接异常。");
                     return -1.0;
                 }
+            }
+        };
+    }
+
+    private Task<Double> createWaitTask(){
+        return new Task<Double>() {
+            @Override
+            protected Double call() throws Exception {
+                Thread.sleep(5000);
+                return 1.0;
             }
         };
     }

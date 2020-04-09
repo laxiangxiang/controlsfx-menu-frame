@@ -2,7 +2,6 @@ package com.shdq.menu_frame.frame.netty;
 
 import com.shdq.menu_frame.frame.netty.client.ClientInit;
 import com.shdq.menu_frame.frame.netty.vo.MessageType;
-import com.shdq.menu_frame.frame.netty.vo.NettyConstant;
 import com.shdq.menu_frame.frame.netty.vo.NettyHeader;
 import com.shdq.menu_frame.frame.netty.vo.NettyMessage;
 import io.netty.bootstrap.Bootstrap;
@@ -13,9 +12,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +79,7 @@ public class NettyClient implements Runnable{
         }finally {
             //不是用户主动关闭线程，说明网络发生了问题，需要进行重连操作
             if (!userClose){
-                System.out.println("连接发生异常，可能发生了服务器异常或网络问题，准备进行重连。。。");
+                log.info("连接发生异常，可能发生了服务器异常或网络问题，准备进行重连。。。");
                 //再次发起重连操作
                 executorService.execute(()->{
                     try {

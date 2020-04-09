@@ -19,4 +19,13 @@ public abstract class Menu {
         this.name = name;
         subMenus = new ArrayList<>();
     }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "name='" + name + '\'' +
+                ", parent=" + parent +
+                ", subMenus=" + subMenus +
+                '}';
+    }
 }
