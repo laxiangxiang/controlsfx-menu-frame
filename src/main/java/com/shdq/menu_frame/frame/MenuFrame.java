@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -36,6 +37,8 @@ public abstract class MenuFrame extends Application {
     private AnchorPane pane;
     private TabPane tabPane;
     private ImageView heartImageView;
+    private ImageView userImageView;
+    private Label userLabel;
     //list第一个item为序号，第二个item为菜单图标路径
     private Map<String,List<String>> menuMap = new HashMap<>();
     //主页菜单，根菜单名称
@@ -54,7 +57,14 @@ public abstract class MenuFrame extends Application {
     public void start(final Stage primaryStage) throws Exception {
         this.stage = primaryStage;
         heartImageView = new ImageView(new Image("/images/heart-offline.png"));//心跳图标
-        CheckUtil checkUtil = new CheckUtil(heartImageView,this);
+        userImageView = new ImageView();
+        userImageView.setCursor(Cursor.HAND);
+        userLabel = new Label();
+        userLabel.getStyleClass().add("username-label");
+        userLabel.setVisible(false);
+        userImageView.setVisible(false);
+        LoginUtil loginUtil = new LoginUtil(this,userImageView,userLabel);
+        CheckUtil checkUtil = new CheckUtil(heartImageView,loginUtil);
         checkUtil.check();
         maintainMenuSortMap(menuMap);
         initializationModule();
@@ -210,9 +220,16 @@ public abstract class MenuFrame extends Application {
         });
         // 右边
         pane = new AnchorPane();
-        pane.getChildren().add(heartImageView);
+        pane.getChildren().addAll(heartImageView,userImageView,userLabel);
         AnchorPane.setRightAnchor(heartImageView,0.0);
         AnchorPane.setTopAnchor(heartImageView,10.0);
+        userImageView.setOnMouseClicked(event -> {
+            //展示用户操作的菜单
+
+        });
+        AnchorPane.setRightAnchor(userImageView,30.0);
+        AnchorPane.setRightAnchor(userLabel,70.0);
+        AnchorPane.setTopAnchor(userLabel,10.0);
         pane.getStyleClass().add("anchorPane");
         tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
