@@ -26,15 +26,18 @@ public class MainApp extends MenuFrame {
         launch(args);
     }
 
+    //没有实现方法块，使用默认的菜单展示
     @Override
     public void initMenuListData(List<Menu> menus) {
-        //没有实现方法块，使用默认的菜单展示
-        Result result = RestTemplateUtil.getRestTemplate().getForObject("http://localhost:8080/parent/menu/getAllParentMenu",Result.class);
-        List<HashMap<String,Object>> parentMenus = (List<HashMap<String,Object>>)result.getData();
-        parentMenus.forEach(stringObjectHashMap -> {
-            ParentMenu parentMenu = JSON.parseObject(JSON.toJSONString(stringObjectHashMap),ParentMenu.class);
-            menus.add(parentMenu);
-        });
+        if (user != null){
+            //todo:用户验证通过，获取用户权限下可查看的菜单
+            Result result = RestTemplateUtil.getRestTemplate().getForObject("http://localhost:8080/parent/menu/getAllParentMenu",Result.class);
+            List<HashMap<String,Object>> parentMenus = (List<HashMap<String,Object>>)result.getData();
+            parentMenus.forEach(stringObjectHashMap -> {
+                ParentMenu parentMenu = JSON.parseObject(JSON.toJSONString(stringObjectHashMap),ParentMenu.class);
+                menus.add(parentMenu);
+            });
+        }
     }
 
     @Override

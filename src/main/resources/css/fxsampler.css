@@ -27,13 +27,37 @@
             linear-gradient(#ECECEC 50%, #D5D5D5 100%),
             radial-gradient(center 50% -40%, radius 200%, #ECECEC 45%, #D5D5D5 50%);
     -fx-text-fill: black;
-    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.8) , 3, 0.5 , 1 , 2 );
+    /*-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.8) , 3, 0.5 , 1 , 2 );*/
 }
 
 .button:focused,.button:hover{
     -fx-background-color: #D5D5D5;
     -fx-border-color: #0384ec;
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+    /*-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );*/
+}
+
+.login-button{
+    -fx-border-width: 1;
+    -fx-border-color: gray;
+    -fx-pref-width: 60;
+    -fx-pref-height: 40;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-font-size: 20px;
+    -fx-font-family: "Segoe UI Symbol";
+    -fx-font-weight: bold;
+    -fx-padding: 3,5,3,5;
+}
+
+.retry-button{
+    -fx-border-width: 1;
+    -fx-border-color: gray;
+    -fx-pref-width: 40;
+    -fx-pref-height: 20;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 12px;
+    -fx-padding: 0,0,0,0;
 }
 
 .right-panel {
@@ -76,11 +100,23 @@
     -fx-text-fill: #1d1d1d;
 }
 
-.init-title-label{
+.title-label{
     -fx-font-size: 25px;
     -fx-font-weight: bold;
     -fx-text-fill: #6c6c6c;
     -fx-effect: dropshadow( gaussian , #D5D5D5, 3, 0.5 , 1 , 2 );
+}
+
+.input-label{
+    -fx-font-weight: bold;
+}
+
+.info-label{
+    -fx-font-family: "JetBrains Mono";
+}
+
+.non-input-text-field{
+    -fx-border-color: red;
 }
 
 .progress{

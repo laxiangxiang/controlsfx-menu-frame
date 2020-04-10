@@ -1,9 +1,7 @@
 package com.shdq.menu_frame.frame;
 
 import com.shdq.menu_frame.frame.model.*;
-import com.shdq.menu_frame.frame.util.CheckUtil;
-import com.shdq.menu_frame.frame.util.MenuScanner;
-import com.shdq.menu_frame.frame.util.MySysTray;
+import com.shdq.menu_frame.frame.util.*;
 import javafx.application.Application;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -49,12 +47,15 @@ public abstract class MenuFrame extends Application {
     //是否不在treeView中展示overView菜单选项，true：在treeview中显示，作为root treeItem；false：采用单独按钮展示
     public static boolean showOverViewOnRoot = true;
     private static String defaultLogoPath = "/images/controlsfx-logo.png";
+    //登录成功后的用户对象，通过用户来获取用户角色，权限，菜单等
+    public Object user;
+
     @Override
     public void start(final Stage primaryStage) throws Exception {
         this.stage = primaryStage;
         heartImageView = new ImageView(new Image("/images/heart-offline.png"));//心跳图标
         CheckUtil checkUtil = new CheckUtil(heartImageView,this);
-        checkUtil.check(new Stage());
+        checkUtil.check();
         maintainMenuSortMap(menuMap);
         initializationModule();
         showInterface(checkUtil);
@@ -64,19 +65,7 @@ public abstract class MenuFrame extends Application {
         changeToHomeTab();
     }
 
-    /**
-     * 在检查资源完成后显示登录窗口，登录完成后再加载数据
-     */
-    public void login(){
-        showLoginInterface();
-        initData();
-    }
-
-    private void showLoginInterface(){
-
-    }
-
-    private void initData(){
+    public final void initData(){
         project = new MenuScanner().discoverMenus(this);
         buildSampleTree(null);
         homeButton.setText(project.getMenuTree().getRoot().getMenu().getMenuName());

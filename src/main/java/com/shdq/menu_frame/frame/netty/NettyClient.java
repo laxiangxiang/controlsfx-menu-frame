@@ -25,13 +25,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyClient implements Runnable{
     private static final Logger log = LoggerFactory.getLogger(NettyClient.class);
-    private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+    private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     private Channel channel;
     private EventLoopGroup group = new NioEventLoopGroup();
     //是否用户主动关闭连接
     private volatile boolean userClose = false;
     //连接是否成功关闭的标志
     private volatile boolean connected = false;
+    private boolean isOnStartUp = true;
     private String ip;
     private int port;
     private Node node;
@@ -73,10 +74,15 @@ public class NettyClient implements Runnable{
             //连接成功后通知等待线程，连接已建立
             synchronized (this){
                 this.connected = true;
+                this.isOnStartUp = false;
                 this.notifyAll();
             }
             future.channel().closeFuture().sync();
         }finally {
+            if (isOnStartUp){//如果在应用启动时连接不上，不主动重连
+                log.info("连接发生异常，可能发生了服务器异常或网络问题,请重试。。。");
+                return;
+            }
             //不是用户主动关闭线程，说明网络发生了问题，需要进行重连操作
             if (!userClose){
                 log.info("连接发生异常，可能发生了服务器异常或网络问题，准备进行重连。。。");
