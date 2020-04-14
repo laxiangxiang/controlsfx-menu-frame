@@ -27,7 +27,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class HeartBeatReqHandler extends ChannelInboundHandlerAdapter {
     private static final Logger log = LoggerFactory.getLogger(HeartBeatReqHandler.class);
     private volatile ScheduledFuture<?> heartBeat;
-
+    private Image imageOnline = new Image("/images/heart-online.png");
+    private Image imageOffline = new Image("/images/heart-offline.png");
     private Node node;
 
     public HeartBeatReqHandler(Node node) {
@@ -40,11 +41,19 @@ public class HeartBeatReqHandler extends ChannelInboundHandlerAdapter {
         //握手或者登录成功，主动发送心跳消息
         if (message.getHeader() != null && message.getHeader().getType() == MessageType.LOGIN_RESP.getValue()){
             //定时发送心跳
-            heartBeat = ctx.executor().scheduleAtFixedRate(new HeartBeatReqHandler.HeartBeatTask(ctx),0,5000, TimeUnit.MILLISECONDS);
+            heartBeat = ctx.executor().scheduleAtFixedRate(new HeartBeatReqHandler.HeartBeatTask(ctx),0,3000, TimeUnit.MILLISECONDS);
             ReferenceCountUtil.release(msg);
         } else if (message.getHeader() != null && message.getHeader().getType() == MessageType.HEARTBEAT_RESP.getValue()) {
             //如果是心跳应答
             log.info("Client receive server heart beat.");
+            //给心跳设置动画,如果连接已断开则不设置
+            ((ImageView)node).setImage(imageOnline);
+            hearImageTransition(node);
+            if (!ctx.channel().isActive()){
+                //只要是断开连接了，就把心图片设置为灰色的心，并且销毁当前任务
+                ((ImageView)node).setImage(imageOffline);
+                ctx.executor().shutdownGracefully();
+            }
             ReferenceCountUtil.release(msg);
         }else {
             //如果是其它报文
@@ -71,15 +80,6 @@ public class HeartBeatReqHandler extends ChannelInboundHandlerAdapter {
             NettyMessage message = buildHeartBeat();
             int count = heartBeatCount.incrementAndGet();
             log.info("Client send heart beat message to server:--->"+count);
-            //给心跳设置动画,如果连接已断开则不设置
-            if (ctx.channel().isActive()){
-                ((ImageView)node).setImage(new Image("/images/heart-online.png"));
-                hearImageTransition(node);
-            }else {
-                //只要是断开连接了，就把心图片设置为灰色的心，并且销毁当前任务
-                ((ImageView)node).setImage(new Image("/images/heart-offline.png"));
-                ctx.executor().shutdownGracefully();
-            }
             ctx.writeAndFlush(message);
         }
 

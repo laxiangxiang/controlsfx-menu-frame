@@ -10,7 +10,7 @@ src
     |   |   \---com
     |   |       \---shdq
     |   |           \---menu_frame
-    |   |               |   MainApp.java    入口主类，继承MenuFrame类，示例用。
+    |   |               |   MenuFrame.java    入口主类，继承MenuFrame类，示例用。
     |   |               |
     |   |               \---frame
     |   |                   |   MenuFrame.java  框架主入口抽象类，使用时需要继承此类实现抽象方法即可

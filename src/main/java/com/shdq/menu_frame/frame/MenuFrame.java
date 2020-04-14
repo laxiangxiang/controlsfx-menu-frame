@@ -27,18 +27,19 @@ import java.util.*;
  */
 public abstract class MenuFrame extends Application {
     private Project project;
-    private Stage stage;
+    public Stage stage;
     private GridPane grid;
     private com.shdq.menu_frame.frame.model.Menu selectedMenu;
-    private TreeView<com.shdq.menu_frame.frame.model.Menu> menuTreeView;
-    private TextField searchBox;
-    private Button homeButton;
+    public final TreeView<com.shdq.menu_frame.frame.model.Menu> menuTreeView = new TreeView<>();
+    public final TextField searchBox = new TextField();
+    public final Button homeButton = new Button();
     private TreeItem<com.shdq.menu_frame.frame.model.Menu> root;
     private AnchorPane pane;
     private TabPane tabPane;
     private ImageView heartImageView;
-    private ImageView userImageView;
-    private Label userLabel;
+    public final ImageView userImageView = new ImageView();
+    public final Label userLabel = new Label();
+    public final LoginUtil loginUtil = new LoginUtil(this,userImageView,userLabel);
     //list第一个item为序号，第二个item为菜单图标路径
     private Map<String,List<String>> menuMap = new HashMap<>();
     //主页菜单，根菜单名称
@@ -57,13 +58,10 @@ public abstract class MenuFrame extends Application {
     public void start(final Stage primaryStage) throws Exception {
         this.stage = primaryStage;
         heartImageView = new ImageView(new Image("/images/heart-offline.png"));//心跳图标
-        userImageView = new ImageView();
         userImageView.setCursor(Cursor.HAND);
-        userLabel = new Label();
         userLabel.getStyleClass().add("username-label");
         userLabel.setVisible(false);
         userImageView.setVisible(false);
-        LoginUtil loginUtil = new LoginUtil(this,userImageView,userLabel);
         CheckUtil checkUtil = new CheckUtil(heartImageView,loginUtil);
         checkUtil.check();
         maintainMenuSortMap(menuMap);
@@ -144,7 +142,6 @@ public abstract class MenuFrame extends Application {
         grid.setVgap(10);
         // --- 左手边
         // search box
-        searchBox = new TextField();
         searchBox.setPromptText("Search");
         searchBox.getStyleClass().add("search-box");
         searchBox.textProperty().addListener(new InvalidationListener() {
@@ -154,7 +151,6 @@ public abstract class MenuFrame extends Application {
             }
         });
         //不在treeView中显示根节点，把根节点设置到按钮中
-        homeButton = new Button();
         if (!showOverViewOnRoot){
             String iconPath = menuMap.get(mainMenuName).get(1);
             if (StringUtils.isNotBlank(iconPath)) {
@@ -170,7 +166,7 @@ public abstract class MenuFrame extends Application {
             });
         }
         // treeView
-        menuTreeView = new TreeView<>(root);
+        menuTreeView.setRoot(root);
         menuTreeView.setShowRoot(showOverViewOnRoot);
         menuTreeView.getStyleClass().add("samples-tree");
         menuTreeView.setMinWidth(200);
@@ -223,12 +219,8 @@ public abstract class MenuFrame extends Application {
         pane.getChildren().addAll(heartImageView,userImageView,userLabel);
         AnchorPane.setRightAnchor(heartImageView,0.0);
         AnchorPane.setTopAnchor(heartImageView,10.0);
-        userImageView.setOnMouseClicked(event -> {
-            //展示用户操作的菜单
-
-        });
-        AnchorPane.setRightAnchor(userImageView,30.0);
-        AnchorPane.setRightAnchor(userLabel,70.0);
+        AnchorPane.setRightAnchor(userImageView,50.0);
+        AnchorPane.setRightAnchor(userLabel,90.0);
         AnchorPane.setTopAnchor(userLabel,10.0);
         pane.getStyleClass().add("anchorPane");
         tabPane = new TabPane();
@@ -323,7 +315,7 @@ public abstract class MenuFrame extends Application {
         }
     }
 
-    private void changeToHomeTab() {
+    public final void changeToHomeTab() {
         HomePage page = getDefaultHomePage();
         Tab tab = new Tab(page.getTitle());
         tab.setContent(page.getContent());

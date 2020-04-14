@@ -1,10 +1,7 @@
 package com.shdq.menu_frame.frame.util;
 
-import com.alibaba.fastjson.JSON;
 import com.shdq.menu_frame.frame.MenuFrame;
 import com.shdq.menu_frame.frame.netty.NettyClient;
-import com.shdq.menu_frame.http.Result;
-import com.shdq.menu_frame.model.User;
 import javafx.animation.*;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -24,10 +21,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 
 /**
  * 资源检查工具类，做初始化工作

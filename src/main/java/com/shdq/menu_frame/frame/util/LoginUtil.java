@@ -36,11 +36,12 @@ public class LoginUtil {
     private MenuFrame menuFrame;
     private ImageView userImageView;
     private Label userLabel;
-
+    private UserMenuUtil userMenuUtil;
     public LoginUtil(MenuFrame menuFrame, ImageView userImageView, Label userLabel) {
         this.menuFrame = menuFrame;
         this.userImageView = userImageView;
         this.userLabel = userLabel;
+        this.userMenuUtil = new UserMenuUtil();
     }
 
     protected void showLoginInterface() {
@@ -90,9 +91,9 @@ public class LoginUtil {
         infoLabel.setVisible(false);
         infoLabel.getStyleClass().add("info-label");
         button.setOnMouseClicked(event -> {
-            String username = usernameTextField.getText();
+            String userName = usernameTextField.getText();
             String password = passwordTextField.getText();
-            if (StringUtils.isBlank(username)) {
+            if (StringUtils.isBlank(userName)) {
                 usernameTextField.getStyleClass().add("non-input-text-field");
                 usernameTextField.setText("");
                 nonInputTextFieldTransition(usernameTextField);
@@ -106,21 +107,34 @@ public class LoginUtil {
             }
             button.setVisible(false);
             progress.setVisible(true);
-            Task task = createAuthenticationTask(username, password);
+            Task task = createAuthenticationTask(userName, password);
             task.valueProperty().addListener((observable, oldValue, newValue) -> {
                 Double o = (Double) newValue;
                 if (o == 1) {
                     try {
-                        String name = ((User)menuFrame.user).getUserName();
-                        userLabel.setText(name);
-                        File file = ResourceUtils.getFile("/images/"+name+".png");
+                        String username = ((User)menuFrame.user).getUserName();
+                        userLabel.setText(username);
+                        File file = ResourceUtils.getFile("/images/"+username+".png");
                         if (file.exists()){
-                            userImageView.setImage(new Image("/images/"+name+".png"));
+                            userImageView.setImage(new Image("/images/"+username+".png"));
                         }else {
-                            userImageView.setImage(new Image("/images/defaultUserAvatar.png"));
+                            //检测文件是否存在即可，再使用静态资源访问url设置图片
+                            Result result = RestTemplateUtil.getRestTemplate().getForObject("http://localhost:8080/user/checkHeadImage?username="+username,Result.class);
+                            if ((Boolean) result.getData()){
+                                userImageView.setImage(new Image("http://localhost:8080/static/"+"head-"+username+".png"));
+                            }else {
+                                userImageView.setImage(new Image("/images/defaultUserAvatar.png"));
+                            }
                         }
                         userLabel.setVisible(true);
                         userImageView.setVisible(true);
+                        userImageView.setOnMouseClicked(event1 -> {
+                            if (!userMenuUtil.isMenuOnShow()){
+                                userMenuUtil.showUserMenu(userImageView,menuFrame);
+                            }else {
+                                userMenuUtil.hidden();
+                            }
+                        });
                         menuFrame.initData();
                     } catch (Exception e) {
                         e.printStackTrace();
