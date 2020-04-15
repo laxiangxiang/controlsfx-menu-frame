@@ -96,7 +96,7 @@ public class MenuScanner {
      * @param menuMap
      * @param sb
      */
-    private void parseMenu(List<com.shdq.menu_frame.frame.entity.Menu> menuList, Map<String, com.shdq.menu_frame.frame.entity.Menu> menuMap, StringBuffer sb){
+    public void parseMenu(List<com.shdq.menu_frame.frame.entity.Menu> menuList, Map<String, com.shdq.menu_frame.frame.entity.Menu> menuMap, StringBuffer sb){
         for (com.shdq.menu_frame.frame.entity.Menu menu1 : menuList){
             List<com.shdq.menu_frame.frame.entity.Menu> menus = menu1.getSubMenus();
             if (!menus.isEmpty()){

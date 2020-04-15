@@ -3,6 +3,8 @@ package com.shdq.menu_frame.model;
 import com.alibaba.fastjson.JSON;
 import com.shdq.menu_frame.frame.entity.Menu;
 
+import java.util.Objects;
+
 public class ChildMenu extends Menu {
     private Integer id;
 
@@ -79,5 +81,19 @@ public class ChildMenu extends Menu {
     @Override
     public String toString() {
         return JSON.toJSONString(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChildMenu)) return false;
+        if (!super.equals(o)) return false;
+        ChildMenu childMenu = (ChildMenu) o;
+        return getId().equals(childMenu.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getId());
     }
 }

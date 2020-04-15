@@ -51,8 +51,8 @@ public class LoginUtil {
         pane.setPadding(new Insets(5, 10, 10, 10));
         pane.setHgap(10);
         pane.setVgap(10);
-        pane.setPrefWidth(600);
-        pane.setPrefHeight(400);
+//        pane.setPrefWidth(600);
+//        pane.setPrefHeight(400);
         pane.setGridLinesVisible(false);
         Label loginLabel = new Label();
         loginLabel.setText("请登录");

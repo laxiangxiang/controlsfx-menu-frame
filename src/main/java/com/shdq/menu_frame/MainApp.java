@@ -6,7 +6,10 @@ import com.shdq.menu_frame.frame.MenuFrame;
 import com.shdq.menu_frame.frame.model.HomePage;
 import com.shdq.menu_frame.frame.util.RestTemplateUtil;
 import com.shdq.menu_frame.http.Result;
+import com.shdq.menu_frame.model.ChildMenu;
 import com.shdq.menu_frame.model.ParentMenu;
+import com.shdq.menu_frame.model.Permission;
+import com.shdq.menu_frame.model.User;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
@@ -31,12 +34,23 @@ public class MainApp extends MenuFrame {
     public void initMenuListData(List<Menu> menus) {
         if (user != null){
             //todo:用户验证通过，获取用户权限下可查看的菜单
-            Result result = RestTemplateUtil.getRestTemplate().getForObject("http://localhost:8080/parent/menu/getAllParentMenu",Result.class);
-            List<HashMap<String,Object>> parentMenus = (List<HashMap<String,Object>>)result.getData();
-            parentMenus.forEach(stringObjectHashMap -> {
-                ParentMenu parentMenu = JSON.parseObject(JSON.toJSONString(stringObjectHashMap),ParentMenu.class);
-                menus.add(parentMenu);
+            Set<Permission> permissions = new HashSet<>();
+            Set<ParentMenu> parentMenus = new HashSet<>();
+            Set<ParentMenu> parentMenus1 = new HashSet<>();
+            ((User)user).getRoles().forEach(role -> {
+                Result result = (Result)RestTemplateUtil.getRestTemplate().getForObject("http://localhost:8080/permission/getPermission?permissionId="+role.getId(),Result.class);
+                Map<String,Object> permissionMap = (Map<String, Object>) result.getData();
+                Permission permission = JSON.parseObject(JSON.toJSONString(permissionMap),Permission.class);
+                permissions.add(permission);
+                parentMenus.addAll(permission.getParentMenus());
             });
+            parentMenus.forEach(parentMenu -> {
+                Result result1 = (Result)RestTemplateUtil.getRestTemplate().getForObject("http://localhost:8080/parent/menu/getParentMenu?parentMenuId="+parentMenu.getId(),Result.class);
+                ParentMenu parentMenu1 = JSON.parseObject(JSON.toJSONString(result1.getData()),ParentMenu.class);
+                parentMenu1.getChildMenus().forEach(childMenu -> parentMenu1.getSubMenus().add((com.shdq.menu_frame.frame.entity.Menu)childMenu));
+                parentMenus1.add(parentMenu1);
+            });
+            menus.addAll(0,parentMenus1);
         }
     }
 

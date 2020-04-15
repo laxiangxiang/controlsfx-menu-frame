@@ -77,6 +77,8 @@ public class Role {
                 "id=" + id +
                 ", roleName='" + roleName + '\'' +
                 ", roleNo='" + roleNo + '\'' +
+                ", users=" + users +
+                ", permissions=" + permissions +
                 '}';
     }
 }

@@ -50,7 +50,7 @@ public abstract class MenuFrame extends Application {
     public static int serverHeartBeatPort;
     //是否不在treeView中展示overView菜单选项，true：在treeview中显示，作为root treeItem；false：采用单独按钮展示
     public static boolean showOverViewOnRoot = true;
-    private static String defaultLogoPath = "/images/controlsfx-logo.png";
+    public static String defaultLogoPath = "/images/controlsfx-logo.png";
     //登录成功后的用户对象，通过用户来获取用户角色，权限，菜单等
     public Object user;
 
